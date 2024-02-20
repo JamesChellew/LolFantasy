@@ -3,7 +3,7 @@ using LolFantasy.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using LolFantasy.Data;
 using Microsoft.AspNetCore.JsonPatch;
-using LolFantasy.Logging;
+
 
 namespace LolFantasy.Controllers
 {

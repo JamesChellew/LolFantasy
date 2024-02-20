@@ -1,13 +1,13 @@
-using LolFantasy.Logging;
+
+using LolFantasy.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//// Creates a Serilog logger configuration
-//Log.Logger = new LoggerConfiguration().MinimumLevel.Information().WriteTo.File("logs/userLogs.txt", rollingInterval: RollingInterval.Infinite).CreateLogger();
-//// Tells program to use Serilog over the default logger.
-//builder.Host.UseSerilog();
+builder.Services.AddDbContext<ApplicationDbContext>(o =>
+o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
 
 builder.Services.AddControllers(option =>
 {
