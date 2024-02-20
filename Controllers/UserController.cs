@@ -11,16 +11,25 @@ namespace LolFantasy.Controllers
     [ApiController] // Indicates that the below is a controller
     public class UserController : ControllerBase
     {
-        public UserController()
+        private readonly ApplicationDbContext _db;
+        public UserController(ApplicationDbContext db)
         {
+            _db = db;
         }
 
         [HttpGet] // Get endpoint when no parameters are passed]
         [ProducesResponseType(StatusCodes.Status200OK)] // The type here is not needed if specified in the return type of the method.
         public ActionResult<IEnumerable<UserDTO>> GetUsers()
         {
-            //logger.Log("Getting List of Users", "information");
-            return Ok(UserStore.userList);
+            //logger.Log("Getting List of Users", "information");]
+
+            var users = _db.Users.ToList();
+            var userDtos = new List<UserDTO>();
+            foreach(User u in users)
+            {
+                userDtos.Add(u.ConvertToDto());
+            }
+            return Ok(userDtos);
         }
 
         // Get endpoint when "id" parameter is passed. Must specify what information is needed in the HttpGet or else the program will not know which endpoint to use.\
@@ -36,14 +45,14 @@ namespace LolFantasy.Controllers
                 //logger.Log($"User Id:{id} is a bad request", "error");
                 return BadRequest();
             }
-            var user = UserStore.userList.FirstOrDefault(u => u.Id == id);
+            var user = _db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 //logger.Log($"Cannot find user with ID:{id}", "error");
                 return NotFound();
             }
             //logger.Log($"Getting information for user ID:{id}", "information");
-            return Ok(user);
+            return Ok(user.ConvertToDto());
         }
 
         [HttpPost(Name = "PostUser")]
@@ -64,10 +73,23 @@ namespace LolFantasy.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            userDTO.Id = UserStore.userList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-            UserStore.userList.Add(userDTO);
-            return CreatedAtRoute("GetUser", new { id = userDTO.Id }, userDTO);
+            User model = new()
+            {
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                PhoneNumber = userDTO.PhoneNumber,
+                Email = userDTO.Email,
+                PhotoUrl = userDTO.PhotoUrl,
+                CreatedTime = DateTime.Now,
+                UpdateTime = DateTime.Now
+            };
+
+            _db.Users.Add(model);
+            _db.SaveChanges();
+            //return CreatedAtRoute("GetUser", new { id = userDTO.Id }, userDTO);
+            return Ok();
         }
+
         [HttpDelete("{id:int}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,12 +100,13 @@ namespace LolFantasy.Controllers
             {
                 return BadRequest();
             }
-            var user = UserStore.userList.FirstOrDefault(u => u.Id == id);
+            var user = _db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
-            UserStore.userList.Remove(user);
+            _db.Users.Remove(user);
+            _db.SaveChanges();
             return NoContent();
         }
 
@@ -97,35 +120,46 @@ namespace LolFantasy.Controllers
             {
                 return BadRequest();
             }
-            var userToBeUpdated = UserStore.userList.FirstOrDefault(u =>u.Id == id);
-            if (userToBeUpdated == null)
+            var userIdToBeUpdated = _db.Users.FirstOrDefault(u => u.Id == id);
+            if (userIdToBeUpdated == null)
             {
-                return NotFound(userDTO.Id);
+                return NotFound(id);
             }
-            userToBeUpdated.FirstName = userDTO.FirstName;
-            return NoContent();
+            User model = new()
+            {
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                PhoneNumber = userDTO.PhoneNumber,
+                Email = userDTO.Email,
+                PhotoUrl = userDTO.PhotoUrl,
+                UpdateTime = DateTime.Now
+            };
+            return Created("GetUser", model);
         }
 
-        [HttpPatch("id:int", Name = "PatchUser")]
-        public IActionResult PatchUser(int id, JsonPatchDocument<UserDTO> patchDTO)
-        {
-            if (patchDTO == null || id <= 0)
-            {
-                return BadRequest();
-            }
-            var userToBePatched = UserStore.userList.FirstOrDefault(u =>u.Id == id);
-            if (userToBePatched == null)
-            {
-                return NotFound();
-            }
-            // patchDTO is a JsonPatchDocument, we want to apply that patch to the userToBeUpdated, storing any errors in the ModelState.
-            patchDTO.ApplyTo(userToBePatched, ModelState);
-            if (!ModelState.IsValid) 
-            { 
-                return BadRequest(ModelState);
-            }
-            return NoContent(); 
-        }
+        // We can use patch for this but we would need to convert from a User (userToBePatched), to a UserDTO to apply the patch, back to a User to update the Database
+        // VERY BAD USE OF CODE.
+
+        //[HttpPatch("id:int", Name = "PatchUser")]
+        //public IActionResult PatchUser(int id, JsonPatchDocument<UserDTO> patchDTO)
+        //{
+        //    if (patchDTO == null || id <= 0)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    var userToBePatched = _db.Users.FirstOrDefault(u =>u.Id == id);
+        //    if (userToBePatched == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    // patchDTO is a JsonPatchDocument, we want to apply that patch to the userToBeUpdated, storing any errors in the ModelState.
+        //    patchDTO.ApplyTo(userToBePatched, ModelState);
+        //    if (!ModelState.IsValid) 
+        //    { 
+        //        return BadRequest(ModelState);
+        //    }
+        //    return NoContent(); 
+        //}
 
     }
 }

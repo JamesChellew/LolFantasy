@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LolFantasy.Models.Dto;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LolFantasy.Models
@@ -15,5 +16,18 @@ namespace LolFantasy.Models
         public string PhotoUrl { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdateTime { get; set; }
+
+        public UserDTO ConvertToDto ()
+        {
+            return new UserDTO
+            {
+                Id = Id,
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                PhoneNumber = PhoneNumber,
+                PhotoUrl = PhotoUrl,
+            };
+        }
     }
 }
