@@ -11,17 +11,15 @@ namespace LolFantasy.Controllers
     [ApiController] // Indicates that the below is a controller
     public class UserController : ControllerBase
     {
-        private readonly ILogging logger;
-        public UserController(ILogging _logger)
+        public UserController()
         {
-            logger = _logger;
         }
 
         [HttpGet] // Get endpoint when no parameters are passed]
         [ProducesResponseType(StatusCodes.Status200OK)] // The type here is not needed if specified in the return type of the method.
         public ActionResult<IEnumerable<UserDTO>> GetUsers()
         {
-            logger.Log("Getting List of Users", "information");
+            //logger.Log("Getting List of Users", "information");
             return Ok(UserStore.userList);
         }
 
@@ -35,16 +33,16 @@ namespace LolFantasy.Controllers
         {
             if (id <= 0)
             {
-                logger.Log($"User Id:{id} is a bad request", "error");
+                //logger.Log($"User Id:{id} is a bad request", "error");
                 return BadRequest();
             }
             var user = UserStore.userList.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                logger.Log($"Cannot find user with ID:{id}", "error");
+                //logger.Log($"Cannot find user with ID:{id}", "error");
                 return NotFound();
             }
-            logger.Log($"Getting information for user ID:{id}", "information");
+            //logger.Log($"Getting information for user ID:{id}", "information");
             return Ok(user);
         }
 
