@@ -19,12 +19,12 @@ namespace LolFantasy.Controllers
 
         [HttpGet] // Get endpoint when no parameters are passed]
         [ProducesResponseType(StatusCodes.Status200OK)] // The type here is not needed if specified in the return type of the method.
-        public ActionResult<IEnumerable<UserDTO>> GetUsers()
+        public ActionResult<IEnumerable<UserDto>> GetUsers()
         {
             //logger.Log("Getting List of Users", "information");]
 
             var users = _db.Users.ToList();
-            var userDtos = new List<UserDTO>();
+            var userDtos = new List<UserDto>();
             foreach(User u in users)
             {
                 userDtos.Add(u.ConvertToDto());
@@ -35,10 +35,10 @@ namespace LolFantasy.Controllers
         // Get endpoint when "id" parameter is passed. Must specify what information is needed in the HttpGet or else the program will not know which endpoint to use.\
         // Name = "GetUser" Gives the Endpoint an explicit name so we can call it later
         [HttpGet("{id:int}", Name = "GetUser")] 
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))] // The type here is not needed if specified in the return type of the method.
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))] // The type here is not needed if specified in the return type of the method.
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<UserDTO> GetUser(int id)
+        public ActionResult<UserDto> GetUser(int id)
         {
             if (id <= 0)
             {
@@ -56,11 +56,11 @@ namespace LolFantasy.Controllers
         }
 
         [HttpPost(Name = "PostUser")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))] // The type here is not needed if specified in the return type of the method.
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))] // The type here is not needed if specified in the return type of the method.
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<UserDTO> CreateUser(UserDTO userDTO)
+        public ActionResult<UserDto> CreateUser(UserDto userDTO)
         {
             //if (!ModelState.IsValid) You can use this to explicitly check if the Model state is valid (in UserDTO, the variable for FirstName has a [required] attribute and a character length of 30)
             //{                        We do not need to do this check as the attribute at the top of this class is [ApiController] which does this check automatically.
@@ -114,7 +114,7 @@ namespace LolFantasy.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateUser(int id, [FromBody]UserDTO userDTO)
+        public IActionResult UpdateUser(int id, [FromBody]UserDto userDTO)
         {
             if (userDTO == null || id != userDTO.Id)
             {
@@ -134,6 +134,7 @@ namespace LolFantasy.Controllers
                 PhotoUrl = userDTO.PhotoUrl,
                 UpdateTime = DateTime.Now
             };
+            _db.Users.Update(model);
             return Created("GetUser", model);
         }
 

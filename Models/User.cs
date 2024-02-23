@@ -17,17 +17,17 @@ namespace LolFantasy.Models
         public DateTime CreatedTime { get; set; }
         public DateTime UpdateTime { get; set; }
 
-        public UserDTO ConvertToDto ()
+        public UserDto ConvertToDto()
         {
-            return new UserDTO
-            {
+            return new UserDto
+            (
                 Id = Id,
                 FirstName = FirstName,
                 LastName = LastName,
                 Email = Email,
                 PhoneNumber = PhoneNumber,
-                PhotoUrl = PhotoUrl,
-            };
+                PhotoUrl = PhotoUrl
+            );            
         }
     }
 }

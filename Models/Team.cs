@@ -5,11 +5,11 @@ namespace LolFantasy.Models
     public class Team
     {
         [Key]
-        private int TeamId { get; set; }
+        public int TeamId { get; set; }
         [Required]
-        private string TeamName { get; set; }
-        private List<Players> Players { get; set; }
-        private DateTime CreatedTime;
-        private DateTime UpdatedTime;
+        public string TeamName { get; set; }
+        public List<Players> Players { get; set; }
+        public DateTime CreatedTime;
+        public DateTime UpdatedTime;
     }
 }
