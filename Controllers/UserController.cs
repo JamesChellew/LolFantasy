@@ -114,28 +114,27 @@ namespace LolFantasy.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateUser(int id, [FromBody]UserDto userDTO)
+        public IActionResult UpdateUser(int id, [FromBody]UserDto userDto)
         {
-            if (userDTO == null || id != userDTO.Id)
+            if (userDto == null || id != userDto.Id)
             {
                 return BadRequest();
             }
-            var userIdToBeUpdated = _db.Users.FirstOrDefault(u => u.Id == id);
-            if (userIdToBeUpdated == null)
+            var userToBeUpdated = _db.Users.FirstOrDefault(u => u.Id == id);
+            if (userToBeUpdated == null)
             {
                 return NotFound(id);
             }
-            User model = new()
-            {
-                FirstName = userDTO.FirstName,
-                LastName = userDTO.LastName,
-                PhoneNumber = userDTO.PhoneNumber,
-                Email = userDTO.Email,
-                PhotoUrl = userDTO.PhotoUrl,
-                UpdateTime = DateTime.Now
-            };
-            _db.Users.Update(model);
-            return Created("GetUser", model);
+            // TODO: Make a method for transforming Dto to actual class type.
+            userToBeUpdated.FirstName = userDto.FirstName;
+            userToBeUpdated.LastName = userDto.LastName;
+            userToBeUpdated.PhoneNumber = userDto.PhoneNumber;
+            userToBeUpdated.Email = userDto.Email;
+            userToBeUpdated.PhotoUrl = userDto.PhotoUrl;
+            userToBeUpdated.UpdateTime = DateTime.Now;
+            _db.Users.Update(userToBeUpdated);
+            _db.SaveChanges();
+            return Ok(userDto);
         }
 
         // We can use patch for this but we would need to convert from a User (userToBePatched), to a UserDTO to apply the patch, back to a User to update the Database
