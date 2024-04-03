@@ -12,7 +12,7 @@ namespace LolFantasy.Models.Dto
         string PhotoUrl
         )
     {
-        public User CovertToUser()
+        public User ConvertToUser()
         {
             return new User
             {
@@ -23,7 +23,9 @@ namespace LolFantasy.Models.Dto
                 PhoneNumber = PhoneNumber,
                 PhotoUrl = PhotoUrl
             };
+        }
     }
+
 
     public record PlayerDto(
         int PlayerId,
@@ -35,52 +37,37 @@ namespace LolFantasy.Models.Dto
         int Assists,
         int CreepScore
         )
+    {
+        public Players ConvertToPlayers()
         {
-            public Players ConvertToPlayers( PlayerDto playerDto )
+            return new Players
             {
-                return new Players
-                {
-                    PlayerId = playerDto.PlayerId,
-                    InGameName = playerDto.InGameName,
-                    FullName = playerDto.FullName,
-                    Role = playerDto.Role,
-                    Kills = playerDto.Kills,
-                    Deaths = playerDto.Deaths,
-                    Assists = playerDto.Assists,
-                    CreepScore = playerDto.CreepScore
-                };
-            }
+                PlayerId = PlayerId,
+                InGameName = InGameName,
+                FullName = FullName,
+                Role = Role,
+                Kills = Kills,
+                Deaths = Deaths,
+                Assists = Assists,
+                CreepScore = CreepScore
+            };
         }
+    }
 
     public record TeamDto(
         [Required] int TeamId,
         [Required] string TeamName,
         List<Players> Players
         )
+    {
+        public Team ConvertToTeam()
         {
-            public Team CovertToTeam(TeamDto teamDto )
+            return new Team
             {
-                return new Team
-                {
-                    TeamId = teamDto.TeamId,
-                    TeamName = teamDto.TeamName,
-                    Players = Players
-                };
-            }
+                TeamId = TeamId,
+                TeamName = TeamName,
+                Players = Players
+            };
         }
-    public record GameDayDto(
-        )
-
-
-    //{
-    //    public int Id { get; set; }
-    //    [Required]
-    //    [MaxLength(30)]
-    //    public string FirstName { get; set; }
-    //    [Required]
-    //    public string LastName { get; set; }
-    //    public string Email { get; set; }
-    //    public string PhoneNumber { get; set; }
-    //    public string PhotoUrl { get; set; }
-    //}
+    }
 }

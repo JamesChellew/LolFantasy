@@ -54,6 +54,8 @@ namespace LolFantasy.Controllers
 
         // POST api/<PlayersController>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreatePlayer(PlayerDto playerDto)
         {
             if (playerDto == null)
@@ -70,6 +72,11 @@ namespace LolFantasy.Controllers
                 Assists = playerDto.Assists,
                 CreepScore = playerDto.CreepScore,
             };
+            // Makes sure the players object was created correctly.
+            if(player == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
             _db.Players.Add(player); // do not need to assign an id as EF will do that for us.
             _db.SaveChanges();
             return Ok();
@@ -88,13 +95,38 @@ namespace LolFantasy.Controllers
             {
                 return NotFound(id);
             }
-            return BadRequest();
+            // TODO: need to make a method for this
+            player.InGameName = playerDto.InGameName;
+            player.FullName = playerDto.FullName;
+            player.Role = playerDto.Role;
+            player.Kills = playerDto.Kills;
+            player.Deaths = playerDto.Deaths;
+            player.Assists = playerDto.Assists;
+            player.CreepScore = playerDto.CreepScore;
+            player.UpdatedTime = DateTime.Now;
+
+            _db.Players.Update(player);
+            _db.SaveChanges(); 
+            return Ok();
+
         }
         
         // DELETE api/<PlayersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            if (id < 0)
+            {
+                return BadRequest();
+            }
+            var player = _db.Players.FirstOrDefault(p => p.PlayerId == id);
+            if (player == null)
+            {
+                return NotFound(id);
+            }
+            _db.Players.Remove(player);
+            _db.SaveChanges();
+            return Ok();
         }
     }
 }
