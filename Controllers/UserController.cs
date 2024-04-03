@@ -62,9 +62,6 @@ namespace LolFantasy.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<UserDto> CreateUser(UserDto userDTO)
         {
-            //if (!ModelState.IsValid) You can use this to explicitly check if the Model state is valid (in UserDTO, the variable for FirstName has a [required] attribute and a character length of 30)
-            //{                        We do not need to do this check as the attribute at the top of this class is [ApiController] which does this check automatically.
-            //}
             if (userDTO == null)
             {
                 return BadRequest();
@@ -73,7 +70,7 @@ namespace LolFantasy.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            var user = userDTO.CovertToUser();
+            var user = userDTO.ConvertToUser();
             user.CreatedTime = DateTime.Now;
             user.UpdateTime = DateTime.Now;
             _db.Users.Add(user);
@@ -86,7 +83,7 @@ namespace LolFantasy.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteUser(int id) // we do not want to return any data when deleting. IActionResult does not specify a return type along with the action result
+        public IActionResult DeleteUser(int id) // IActionResult does not need specify a return type along with the action result
         {
             if (id <= 0)
             {
@@ -117,41 +114,8 @@ namespace LolFantasy.Controllers
             {
                 return NotFound(id);
             }
-            // TODO: Make a method for transforming Dto to actual class type.
-            userToBeUpdated.FirstName = userDto.FirstName;
-            userToBeUpdated.LastName = userDto.LastName;
-            userToBeUpdated.PhoneNumber = userDto.PhoneNumber;
-            userToBeUpdated.Email = userDto.Email;
-            userToBeUpdated.PhotoUrl = userDto.PhotoUrl;
-            userToBeUpdated.UpdateTime = DateTime.Now;
+            userToBeUpdated = userDto.ConvertToUser();
             _db.Users.Update(userToBeUpdated);
             _db.SaveChanges();
             return Ok(userDto);
         }
-
-        // We can use patch for this but we would need to convert from a User (userToBePatched), to a UserDTO to apply the patch, back to a User to update the Database
-        // VERY BAD USE OF CODE.
-
-        //[HttpPatch("id:int", Name = "PatchUser")]
-        //public IActionResult PatchUser(int id, JsonPatchDocument<UserDTO> patchDTO)
-        //{
-        //    if (patchDTO == null || id <= 0)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var userToBePatched = _db.Users.FirstOrDefault(u =>u.Id == id);
-        //    if (userToBePatched == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    // patchDTO is a JsonPatchDocument, we want to apply that patch to the userToBeUpdated, storing any errors in the ModelState.
-        //    patchDTO.ApplyTo(userToBePatched, ModelState);
-        //    if (!ModelState.IsValid) 
-        //    { 
-        //        return BadRequest(ModelState);
-        //    }
-        //    return NoContent(); 
-        //}
-
-    }
-}
