@@ -73,18 +73,10 @@ namespace LolFantasy.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            User model = new()
-            {
-                FirstName = userDTO.FirstName,
-                LastName = userDTO.LastName,
-                PhoneNumber = userDTO.PhoneNumber,
-                Email = userDTO.Email,
-                PhotoUrl = userDTO.PhotoUrl,
-                CreatedTime = DateTime.Now,
-                UpdateTime = DateTime.Now
-            };
-
-            _db.Users.Add(model);
+            var user = userDTO.CovertToUser();
+            user.CreatedTime = DateTime.Now;
+            user.UpdateTime = DateTime.Now;
+            _db.Users.Add(user);
             _db.SaveChanges();
             //return CreatedAtRoute("GetUser", new { id = userDTO.Id }, userDTO);
             return Ok();

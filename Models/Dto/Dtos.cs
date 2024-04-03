@@ -10,7 +10,20 @@ namespace LolFantasy.Models.Dto
         string Email,
         string PhoneNumber,
         string PhotoUrl
-        );
+        )
+    {
+        public User CovertToUser()
+        {
+            return new User
+            {
+                Id = Id,
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                PhoneNumber = PhoneNumber,
+                PhotoUrl = PhotoUrl
+            };
+    }
 
     public record PlayerDto(
         int PlayerId,
@@ -21,13 +34,43 @@ namespace LolFantasy.Models.Dto
         int Deaths,
         int Assists,
         int CreepScore
-        );
+        )
+        {
+            public Players ConvertToPlayers( PlayerDto playerDto )
+            {
+                return new Players
+                {
+                    PlayerId = playerDto.PlayerId,
+                    InGameName = playerDto.InGameName,
+                    FullName = playerDto.FullName,
+                    Role = playerDto.Role,
+                    Kills = playerDto.Kills,
+                    Deaths = playerDto.Deaths,
+                    Assists = playerDto.Assists,
+                    CreepScore = playerDto.CreepScore
+                };
+            }
+        }
 
     public record TeamDto(
         [Required] int TeamId,
         [Required] string TeamName,
         List<Players> Players
-        );
+        )
+        {
+            public Team CovertToTeam(TeamDto teamDto )
+            {
+                return new Team
+                {
+                    TeamId = teamDto.TeamId,
+                    TeamName = teamDto.TeamName,
+                    Players = Players
+                };
+            }
+        }
+    public record GameDayDto(
+        )
+
 
     //{
     //    public int Id { get; set; }

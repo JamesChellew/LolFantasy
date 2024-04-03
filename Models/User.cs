@@ -17,6 +17,7 @@ namespace LolFantasy.Models
         public DateTime CreatedTime { get; set; }
         public DateTime UpdateTime { get; set; }
 
+
         public UserDto ConvertToDto()
         {
             return new UserDto
