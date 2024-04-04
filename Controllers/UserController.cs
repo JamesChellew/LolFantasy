@@ -25,7 +25,7 @@ namespace LolFantasy.Controllers
 
             var users = _db.Users.ToList();
             var userDtos = new List<UserDto>();
-            foreach(User u in users)
+            foreach (User u in users)
             {
                 userDtos.Add(u.ConvertToDto());
             }
@@ -34,7 +34,7 @@ namespace LolFantasy.Controllers
 
         // Get endpoint when "id" parameter is passed. Must specify what information is needed in the HttpGet or else the program will not know which endpoint to use.\
         // Name = "GetUser" Gives the Endpoint an explicit name so we can call it later
-        [HttpGet("{id:int}", Name = "GetUser")] 
+        [HttpGet("{id:int}", Name = "GetUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))] // The type here is not needed if specified in the return type of the method.
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -103,7 +103,7 @@ namespace LolFantasy.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateUser(int id, [FromBody]UserDto userDto)
+        public IActionResult UpdateUser(int id, [FromBody] UserDto userDto)
         {
             if (userDto == null || id != userDto.Id)
             {
@@ -119,3 +119,5 @@ namespace LolFantasy.Controllers
             _db.SaveChanges();
             return Ok(userDto);
         }
+    }
+}
