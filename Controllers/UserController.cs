@@ -19,9 +19,8 @@ namespace LolFantasy.Controllers
 
         [HttpGet] // Get endpoint when no parameters are passed]
         [ProducesResponseType(StatusCodes.Status200OK)] // The type here is not needed if specified in the return type of the method.
-        public ActionResult<IEnumerable<UserDto>> GetUsers()
+        public ActionResult<IEnumerable<UserDto>> GetUsers() // Testing only.
         {
-            //logger.Log("Getting List of Users", "information");]
 
             var users = _db.Users.ToList();
             var userDtos = new List<UserDto>();
@@ -42,16 +41,13 @@ namespace LolFantasy.Controllers
         {
             if (id <= 0)
             {
-                //logger.Log($"User Id:{id} is a bad request", "error");
                 return BadRequest();
             }
             var user = _db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                //logger.Log($"Cannot find user with ID:{id}", "error");
                 return NotFound();
             }
-            //logger.Log($"Getting information for user ID:{id}", "information");
             return Ok(user.ConvertToDto());
         }
 
@@ -75,7 +71,6 @@ namespace LolFantasy.Controllers
             user.UpdateTime = DateTime.Now;
             _db.Users.Add(user);
             _db.SaveChanges();
-            //return CreatedAtRoute("GetUser", new { id = userDTO.Id }, userDTO);
             return Ok();
         }
 
