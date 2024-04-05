@@ -57,7 +57,7 @@ namespace LolFantasy.Models.Dto
     public record TeamDto(
         [Required] int TeamId,
         [Required] string TeamName,
-        List<Players> Players
+        List<int> PlayerIdList
         )
     {
         public Team ConvertToTeam()
@@ -66,7 +66,7 @@ namespace LolFantasy.Models.Dto
             {
                 TeamId = TeamId,
                 TeamName = TeamName,
-                Players = Players
+                PlayerIdList = PlayerIdList
             };
         }
     }

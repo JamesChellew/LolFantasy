@@ -22,12 +22,12 @@ namespace LolFantasy.Models
         {
             return new UserDto
             (
-                Id = Id,
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                PhoneNumber = PhoneNumber,
-                PhotoUrl = PhotoUrl
+                Id,
+                FirstName,
+                LastName,
+                Email,
+                PhoneNumber,
+                PhotoUrl
             );            
         }
     }

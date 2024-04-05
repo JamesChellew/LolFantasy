@@ -23,14 +23,14 @@ namespace LolFantasy.Models
         {
             return new PlayerDto
             (
-                PlayerId = PlayerId,
-                InGameName = InGameName,
-                FullName = FullName,
-                Role = Role,
-                Kills = Kills,
-                Deaths = Deaths,
-                Assists = Assists,
-                CreepScore = CreepScore
+                PlayerId,
+                InGameName,
+                FullName,
+                Role,
+                Kills,
+                Deaths,
+                Assists,
+                CreepScore
             );
 
         }
