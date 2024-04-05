@@ -11,6 +11,7 @@ namespace LolFantasy.Models
         public string InGameName;
         public string FullName;
         public string Role;
+        public int TeamId;
         public int Kills;
         public int Deaths;
         public int Assists;
