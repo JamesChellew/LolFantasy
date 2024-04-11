@@ -2,7 +2,6 @@
 using LolFantasy.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using LolFantasy.Data;
-using Microsoft.AspNetCore.JsonPatch;
 
 
 namespace LolFantasy.Controllers
