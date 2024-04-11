@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace LolFantasy.Data
-{
+{   
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
@@ -13,7 +13,12 @@ namespace LolFantasy.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Players> Players { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Week> Weeks { get; set; }
+        public DbSet<Match> GameDays { get; set; }
+        public DbSet<Season> Seasons { get; set; }
 
+
+        // how to populate the database manually.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<User>().HasData(
