@@ -6,17 +6,16 @@ namespace LolFantasy.Models
     {
         // Match Attributes 
         [Key]
-        public int MatchId { get; set; }
-        public int MatchType { get; set; }
+        public int MatchId { get; set; } // Unique Identifier of particular match
+        public int MatchType { get; set; } // Regular game | Semi finals | Finals etc.
         [Required]
-        public DateOnly MatchDate { get; set; }
+        public DateOnly MatchDate { get; set; } // When the Game was played
         [Required]
-        public int HomeTeamId { get; set; }
+        public int HomeTeamId { get; set; } // Id of the home team
         [Required]
-        public int AwayTeamId { get; set; }
-        public bool GameComplete { get; set; }
-        public int WinnerTeamId { get; set; }
-        public List<int> PlayerStatList { get; set; } // Reference to the stats for each player for a particular match
-        public List<int> TeamStatList { get; set; } // Reference to the stats for a Team for a particular match
+        public int AwayTeamId { get; set; } // Id of the away team
+        public bool GameComplete { get; set; } // Whether game game has been played or not. Can show default values if not played.
+        public int WinnerTeamId { get; set; } // Id of the winning team so information displays correctly.
+
     }
 }
